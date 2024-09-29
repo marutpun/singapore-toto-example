@@ -1,53 +1,12 @@
-import { useState } from 'react';
 import 'xp.css/dist/XP.css';
-import { getRandomNumbers, randomBonusNumber, compareNumbers, determinePrizeGroup } from './utils';
+import { determinePrizeGroup } from './utils';
 import './styles/app.css';
 
-const initialState = {
-  no1: '',
-  no2: '',
-  no3: '',
-  no4: '',
-  no5: '',
-  no6: '',
-};
-
-const winningNumber = getRandomNumbers();
-const getRandNumber = randomBonusNumber(winningNumber);
+import useLottery from './hooks/useLottery';
+import { winningNumber, getRandNumber } from './hooks/useLottery';
 
 export default function App() {
-  const [userPick, setUserPick] = useState(initialState);
-  const [result, setResult] = useState();
-
-  const _handleSubmitToto = (e) => {
-    e.preventDefault();
-
-    const resultsObj = compareNumbers(Object.values(userPick), winningNumber, getRandNumber);
-    setResult(resultsObj);
-  };
-
-  const _handleInputPickNumber = (event) => {
-    const minPickNumber = 1;
-    const maxPickNumber = 49;
-
-    const { target } = event;
-    const value = target.value; // Keep the string value to allow empty input
-
-    // Allow empty string or valid numbers
-    const numericValue = value === '' ? '' : Number(value);
-
-    if (value === '' || (numericValue >= minPickNumber && numericValue <= maxPickNumber)) {
-      setUserPick({ ...userPick, [target.name]: numericValue });
-    } else {
-      console.warn(`Please enter a number between ${minPickNumber} and ${maxPickNumber}`);
-    }
-  };
-
-  const _resetForm = () => {
-    setUserPick(initialState);
-    setResult(null);
-  };
-
+  const { userPick, result, _handleSubmitToto, _handleInputPickNumber, _resetForm } = useLottery();
   return (
     <div className="container">
       <div className="window" style={{ width: 600 }}>
